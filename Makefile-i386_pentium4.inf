@@ -6,16 +6,32 @@ PKG_NAME="OWRT-PLIB-ubus"
 PKG_VERSION="0.1.1-1"
 PKG_RELEASE=2
 
-LIB_DIR=/usr/lib/python3.7/lib-dynload
-LIB=ubus.cpython-37-i386_pentium4.so
+MODULE_NAME = owrt_plib_ubus
+LIB_DIR ?= /usr/lib/python3.7/lib-dynload
+LIB = ubus.cpython-37-i386_pentium4.so
 
-.PHONY: all install
+INSTALL_DIR=
 
-all: install
+all: configure build install
+
+configure:
+        @echo "Nothing to do"
+
+build:
+        @echo "Nothing to do"
 
 install:
-        mkdir -p $(LIB_DIR)
-        cp $(LIB) $(LIB_DIR)/ubus.cpython-37.so
+ifeq ($(origin INSTALL_DIR),command line)
+        mkdir -p $(INSTALL_DIR)${LIB_DIR}
+else
+        mkdir -p $(INSTALL_DIR)${LIB_DIR}
+endif
+        cp $(LIB) $(INSTALL_DIR)$(LIB_DIR)/ubus.cpython-37.so
 
 clean:
-        rm -f $(LIB_DIR)/ubus.cpython-37.so
+ifeq ($(origin INSTALL_DIR),command line)
+        rm -rf $(INSTALL_DIR)
+else
+        rm -f $(INSTALL_DIR)$(LIB_DIR)/ubus.cpython-37.so
+        $(if $(strip $(INSTALL_DIR)),rm -r $(INSTALL_DIR),)
+endif
