@@ -1,0 +1,55 @@
+SECTION="NetPing modules"
+CATEGORY="Base"
+TITLE="EPIC OWRT-PLIB-ubus"
+
+PKG_NAME="OWRT-PLIB-ubus"
+PKG_VERSION="0.1.1-1"
+PKG_RELEASE=4
+PKG_DEPENDS=
+
+MODULE_NAME = owrt_plib_ubus
+
+INSTALL_DIR=
+
+TESTS_SRC_DIR=Tests
+
+ARCH=
+
+all: build preinstall install configure
+
+ipk: build install
+
+preinstall:
+	@echo "Nothing to do"
+
+configure:
+	@echo "Nothing to do"
+
+build:
+	@echo "Nothing to do"
+
+install:
+ifeq ($(ARCH),x86_64)
+	mkdir -p $(INSTALL_DIR)/usr/lib/python3.7/lib-dynload
+	cp ubus.cpython-37-x86_64.so $(INSTALL_DIR)/usr/lib/python3.7/lib-dynload/ubus.cpython-37.so
+else ifeq ($(ARCH),mipsel_24kc)
+	mkdir -p $(INSTALL_DIR)/usr/lib/python3.6/lib-dynload
+	cp ubus.cpython-36-mipsel_24kc.so $(INSTALL_DIR)/usr/lib/python3.6/lib-dynload/ubus.cpython-36.so
+else ifeq ($(ARCH),i386_pentium4)
+	mkdir -p $(INSTALL_DIR)/usr/lib/python3.7/lib-dynload
+	cp ubus.cpython-37-i386_pentium4.so $(INSTALL_DIR)/usr/lib/python3.7/lib-dynload/ubus.cpython-37.so
+else ifeq ($(ARCH),arm_cortex-a7+neon-vfpv4)
+	mkdir -p $(INSTALL_DIR)/usr/lib/python3.7/lib-dynload
+	cp ubus.cpython-37-arm_cortex-a7+neon-vfpv4.so $(INSTALL_DIR)/usr/lib/python3.7/lib-dynload/ubus.cpython-37.so
+else
+	@echo "Bad ARCH name"
+	@exit 1
+endif
+
+clean:
+ifeq ($(origin INSTALL_DIR),command line)
+	rm -rf $(INSTALL_DIR)
+else
+	rm -f $(INSTALL_DIR)$(LIB_DIR)/ubus.cpython-37.so
+	$(if $(strip $(INSTALL_DIR)),rm -r $(INSTALL_DIR),)
+endif
