@@ -8,12 +8,13 @@ PKG_RELEASE=4
 PKG_DEPENDS=
 
 MODULE_NAME = owrt_plib_ubus
+MODULE_FILES_DIR ?= /usr/lib/python3.7/site-packages/
 
 INSTALL_DIR=
 
-TESTS_SRC_DIR=Tests
+TESTS_SRC_DIR=Tests/
 
-ARCH=
+ARCH=x86_64
 
 all: build preinstall install configure
 
@@ -29,6 +30,7 @@ build:
 	@echo "Nothing to do"
 
 install:
+	    mkdir -p $(INSTALL_DIR)${MODULE_FILES_DIR}/$(MODULE_NAME)
 ifeq ($(ARCH),x86_64)
 	mkdir -p $(INSTALL_DIR)/usr/lib/python3.7/lib-dynload
 	cp ubus.cpython-37-x86_64.so $(INSTALL_DIR)/usr/lib/python3.7/lib-dynload/ubus.cpython-37.so
@@ -45,11 +47,13 @@ else
 	@echo "Bad ARCH name"
 	@exit 1
 endif
+	cp -r $(TESTS_SRC_DIR) $(INSTALL_DIR)$(MODULE_FILES_DIR)$(MODULE_NAME)/$(TESTS_SRC_DIR)
 
 clean:
 ifeq ($(origin INSTALL_DIR),command line)
 	rm -rf $(INSTALL_DIR)
 else
 	rm -f $(INSTALL_DIR)$(LIB_DIR)/ubus.cpython-37.so
+	rm -r $(INSTALL_DIR)$(MODULE_FILES_DIR)$(MODULE_NAME)
 	$(if $(strip $(INSTALL_DIR)),rm -r $(INSTALL_DIR),)
 endif
